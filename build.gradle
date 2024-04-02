@@ -1,8 +1,13 @@
 plugins {
 	id 'java'
+	id 'application'
+	id 'checkstyle'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'io.freefair.lombok' version '8.4'
+	id 'com.github.ben-manes.versions' version '0.49.0'
+	id 'com.github.johnrengelman.processes' version '0.5.0'
+	id 'jacoco'
 }
 
 group = 'com.example'
@@ -10,6 +15,10 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
+}
+application {
+	// Входная точка
+	mainClass = 'com.example.timetracker.TimeTrackerApplication'
 }
 
 configurations {
@@ -31,7 +40,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.2'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 	implementation 'org.postgresql:postgresql:42.7.0'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
