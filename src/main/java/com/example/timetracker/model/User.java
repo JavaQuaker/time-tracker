@@ -1,13 +1,7 @@
 package com.example.timetracker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -32,11 +28,15 @@ public class User implements BaseEntity {
     private String firstName;
 
     private String lastName;
-
-    @OneToMany(mappedBy = "assignee", fetch = FetchType.LAZY)
+    @Email
+    @Column(unique = true)
+    private String email;
 
     @CreatedDate
     private LocalDate createdAt;
+
+    @OneToMany(mappedBy = "assignee", fetch = FetchType.LAZY)
+    List<Task> list = new ArrayList<>();
 
 
 

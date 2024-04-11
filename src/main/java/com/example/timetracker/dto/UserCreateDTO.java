@@ -1,5 +1,6 @@
 package com.example.timetracker.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -15,5 +16,7 @@ public class UserCreateDTO {
 
     @NotBlank
     private String lastName;
+    @Email
+    private String email;
 
 }

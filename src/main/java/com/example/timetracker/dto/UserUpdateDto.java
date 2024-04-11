@@ -1,5 +1,6 @@
 package com.example.timetracker.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.openapitools.jackson.nullable.JsonNullable;
 import lombok.Getter;
@@ -13,4 +14,6 @@ public class UserUpdateDto {
 
     @NotNull
     private JsonNullable<String> lastName;
+    @Email
+    private JsonNullable<String> email;
 }

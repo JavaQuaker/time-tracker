@@ -1,6 +1,7 @@
 package com.example.timetracker.controller;
 
 import com.example.timetracker.dto.TaskCreateDTO;
+import com.example.timetracker.dto.TaskParamsDTO;
 import com.example.timetracker.dto.TaskDTO;
 import com.example.timetracker.dto.TaskUpdateDTO;
 import com.example.timetracker.exception.ResourceNotFoundException;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +40,15 @@ public class TaskController {
     private TaskMapper taskMapper;
     @Autowired
     private TaskService taskService;
+    private TaskParamsDTO params;
     @Operation(summary = "Get the list all tasks")
     @ApiResponse(responseCode = "200", description = "List of all tasks",
     content = {@Content(mediaType = "application/json",
     schema = @Schema(implementation = TaskCreateDTO.class))})
     @GetMapping(path = "")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskDTO> index() {
-        return taskService.getAll();
+    public List<TaskDTO> index(TaskParamsDTO params) {
+        return taskService.getAll(params);
     }
     @Operation(summary = "Get task by id")
     @ApiResponses(value = {
