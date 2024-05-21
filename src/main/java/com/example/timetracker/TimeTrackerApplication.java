@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.util.Calendar;
+
 @EnableJpaAuditing
 @SpringBootApplication
 public class TimeTrackerApplication {
@@ -16,6 +18,10 @@ public class TimeTrackerApplication {
 	@Bean
 	public Faker getFaker() {
 		return new Faker();
+	}
+	@Bean
+	public Calendar calendar() {
+		return Calendar.getInstance();
 	}
 
 }

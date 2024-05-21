@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -26,14 +27,17 @@ public class Task implements BaseEntity {
     private String name;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDate timeoutAt;
+    private LocalDateTime timeoutAt;
 
     @ManyToOne
-    @JoinColumn(name = "assignee_id")
+//    @JoinColumn(name = "assignee_id")
     private User assignee;
+
+
+
 
 
 }

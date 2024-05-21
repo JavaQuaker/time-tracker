@@ -1,9 +1,6 @@
 package com.example.timetracker.controller;
 
-import com.example.timetracker.dto.TaskCreateDTO;
-import com.example.timetracker.dto.TaskParamsDTO;
-import com.example.timetracker.dto.TaskDTO;
-import com.example.timetracker.dto.TaskUpdateDTO;
+import com.example.timetracker.dto.*;
 import com.example.timetracker.exception.ResourceNotFoundException;
 import com.example.timetracker.mapper.TaskMapper;
 
@@ -30,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -47,8 +45,8 @@ public class TaskController {
     schema = @Schema(implementation = TaskCreateDTO.class))})
     @GetMapping(path = "")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskDTO> index(TaskParamsDTO params) {
-        return taskService.getAll(params);
+    public List<TaskTimeTrackerDataDto> index(/*TaskParamsDTO params*/) {
+        return taskService.getAll();
     }
     @Operation(summary = "Get task by id")
     @ApiResponses(value = {
@@ -56,7 +54,7 @@ public class TaskController {
             @ApiResponse(responseCode = "400", description = "Task not found")
     })
     @GetMapping(path = "/{id}")
-    public TaskDTO show(
+    public TaskTimeTrackerDataDto show(
             @Parameter(description = "id of task to be found")
             @PathVariable long id) {
         return taskService.findById(id);
@@ -69,7 +67,7 @@ public class TaskController {
     })
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskDTO create(
+    public DataDto create(
             @Parameter(description = "Task data to save")
             @Valid @RequestBody TaskCreateDTO taskData) {
         return taskService.create(taskData);

@@ -35,7 +35,7 @@ public class UserService {
     public UserDTO create(UserCreateDTO userData) {
        User user = userMapper.map(userData);
        userRepository.save(user);
-       var userDTO = userMapper.map(user);
+        UserDTO userDTO = userMapper.map(user);
        return userDTO;
     }
     public UserDTO update(UserUpdateDto userData, long id) {
