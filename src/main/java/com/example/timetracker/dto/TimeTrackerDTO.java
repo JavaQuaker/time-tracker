@@ -3,6 +3,8 @@ package com.example.timetracker.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,7 +14,7 @@ import java.util.Date;
 public class TimeTrackerDTO {
     private long id;
     private String nameTask;
-    private Date startTime;
-    private Date stopTime;
+    private LocalDateTime startTime;
+    private LocalDateTime stopTime;
     private long nameTimeTrackerId;
 }

@@ -35,9 +35,6 @@ public class User implements BaseEntity {
     @CreatedDate
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "assignee", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> list = new ArrayList<>();
-
-
-
 }

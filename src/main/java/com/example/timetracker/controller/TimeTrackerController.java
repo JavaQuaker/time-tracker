@@ -3,6 +3,7 @@ package com.example.timetracker.controller;
 import com.example.timetracker.dto.TimeTrackerCreateDTO;
 import com.example.timetracker.dto.TimeTrackerDTO;
 import com.example.timetracker.dto.TimeTrackerUpdateDTO;
+import com.example.timetracker.exception.ResourceNotFoundException;
 import com.example.timetracker.mapper.TimeTrackerMapper;
 import com.example.timetracker.repository.TimeTrackerRepository;
 import com.example.timetracker.service.TimeTrackerService;
@@ -36,5 +37,11 @@ public class TimeTrackerController {
     @ResponseStatus(HttpStatus.OK)
     TimeTrackerDTO update(@PathVariable long id) {
         return timeTrackerService.update(id);
+    }
+    @DeleteMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id) {
+        timeTrackerService.delete(id);
+
     }
 }

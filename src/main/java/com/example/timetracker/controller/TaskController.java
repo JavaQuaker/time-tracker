@@ -53,7 +53,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task found"),
             @ApiResponse(responseCode = "400", description = "Task not found")
     })
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "show/{id}")
     public TaskTimeTrackerDataDto show(
             @Parameter(description = "id of task to be found")
             @PathVariable long id) {
@@ -87,10 +87,15 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task delete"),
             @ApiResponse(responseCode = "400", description = "Task with id not found")
     })
+
+    @GetMapping(path = "findByUserId/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    List<TaskTimeTrackerDataDto> findByUserId(@PathVariable long userId) {
+        return taskService.findByUserId(userId);
+    }
+
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable long id) {
-        var task = taskRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Task not found"));
-        taskRepository.deleteById(id);
+        taskService.delete(id);
     }
 }

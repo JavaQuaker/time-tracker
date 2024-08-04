@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.openapitools.jackson.nullable.JsonNullable;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,5 +14,5 @@ import java.util.Date;
 @Setter
 public class TimeTrackerUpdateDTO {
     @NotNull
-    private JsonNullable<Date> stopTime;
+    private JsonNullable<LocalDateTime> stopTime;
 }

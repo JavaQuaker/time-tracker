@@ -23,5 +23,4 @@ public class TimeTrackerApplication {
 	public Calendar calendar() {
 		return Calendar.getInstance();
 	}
-
 }

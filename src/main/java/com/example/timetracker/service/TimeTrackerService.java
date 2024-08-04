@@ -25,21 +25,6 @@ public class TimeTrackerService {
     private StartTime startTime;
     private Calendar calendar;
 
-
-
-
-//    public TimeTrackerDTO create(TimeTrackerCreateDTO trackerData) {
-//        TimeTracker timeTracker = timeTrackerMapper.map(trackerData);
-////        timeTracker.setStartTime(timeTracker.getStartTime());
-//        timeTracker.setStartTime(startTime.startStopTime());
-//        System.out.println("startTime " + startTime.startStopTime());
-//        timeTrackerRepository.save(timeTracker);
-//        TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
-//        System.out.println("timeTrackerDTO.getNameTask() " + timeTrackerDTO.getNameTask());
-//        System.out.println("timeTrackerDTO.getId() " + timeTrackerDTO.getId());
-//        System.out.println("timeTrackerDTO.getStartTime() " + timeTrackerDTO.getStartTime());
-//        return timeTrackerDTO;
-//    }
     //старт времени отсчета задачи
     public TimeTrackerDTO create(long id) {
         TimeTracker timeTracker = timeTrackerRepository.findById(id)
@@ -50,17 +35,6 @@ public class TimeTrackerService {
         System.out.println("check startTime " + timeTracker.getStartTime());
         return dto;
     }
-//    public TimeTrackerDTO update(TimeTrackerUpdateDTO dto, long id) {
-//        var timeTracker = timeTrackerRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("TimeTracker not found"));
-////        timeTracker.setStartTime(timeTracker.getStopTime());
-//        timeTracker.setStopTime(startTime.startStopTime());
-//        System.out.println("stopTime " + startTime.startStopTime());
-//        timeTrackerMapper.update(dto, timeTracker);
-//        timeTrackerRepository.save(timeTracker);
-//        TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
-//        return timeTrackerDTO;
-//    }
     public TimeTrackerDTO update(long id) {
         TimeTracker timeTracker = timeTrackerRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("timeTracker not found"));
@@ -75,5 +49,10 @@ public class TimeTrackerService {
                 .orElseThrow(()-> new ResourceNotFoundException("timeTracker not found"));
         TimeTrackerDTO dto = timeTrackerMapper.map(timeTracker);
         return dto;
+    }
+    public void delete(long id) {
+        var timeTrackers = timeTrackerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("not found"));
+        timeTrackerRepository.deleteById(id);
     }
 }

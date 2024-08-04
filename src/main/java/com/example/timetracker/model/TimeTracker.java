@@ -10,6 +10,8 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,11 +31,19 @@ public class TimeTracker implements BaseEntity {
     @NotBlank
     private String nameTask;
 
-    private Date startTime;
+    private LocalDateTime startTime;
 
-    private Date stopTime;
+    private LocalDateTime stopTime;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task nameTimeTracker;
+
+    @Override
+    public String toString() {
+        return "taskTimeTrackers example " +
+                "id " + id +
+                "nameTask " + nameTask;
+    }
 }
+

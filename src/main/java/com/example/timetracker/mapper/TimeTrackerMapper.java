@@ -5,6 +5,9 @@ import com.example.timetracker.dto.TimeTrackerDTO;
 import com.example.timetracker.dto.TimeTrackerUpdateDTO;
 import com.example.timetracker.model.TimeTracker;
 import org.mapstruct.*;
+import org.openapitools.jackson.nullable.JsonNullable;
+
+import java.security.Timestamp;
 
 @Mapper(
         uses = { JsonNullableMapper.class, ReferenceMapper.class },
@@ -18,5 +21,7 @@ public abstract class TimeTrackerMapper {
     @Mapping(target = "nameTimeTracker", source = "nameTimeTrackerId")
     public abstract TimeTracker map(TimeTrackerCreateDTO dto);
 //    @Mapping(target = "nameTimeTracker", source = "nameTimeTrackerId")
+
     public abstract void update(TimeTrackerUpdateDTO dto, @MappingTarget TimeTracker model);
+
 }

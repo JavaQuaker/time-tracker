@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,17 +41,6 @@ public class TaskService {
     private TimeTrackerMapper timeTrackerMapper;
     private StartTime startTime;
 
-
-
-// фильтрация задач по пользователю. http://localhost:8080/api/tasks?assigneeId=2 выведет все задачи пользователя
-// с id=2
-//    public List<TaskDTO> getAll(TaskParamsDTO params) {
-//        Specification<Task> spec = specBuilder.build(params);
-//        List<Task> tasks = taskRepository.findAll(spec);
-//        return tasks.stream()
-//                .map(taskMapper::map)
-//                .toList();
-//    }
 
   public List<TaskTimeTrackerDataDto> getAll() {
       List<Task> tasks = taskRepository.findAll();
@@ -93,25 +83,14 @@ public class TaskService {
         TaskDTO taskDTO = taskMapper.map(task);
         TimeTracker timeTracker = timeTrackerRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("TimeTracker not found"));
-//        timeTracker.setStartTime(timeTracker.getStartTime());
-//        timeTracker.setStopTime(timeTracker.getStopTime());
+
         TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
 
         dto.setTaskDTO(taskDTO);
         dto.setTimeTrackerDTO(timeTrackerDTO);
         return dto;
     }
-//    public TaskDTO create(TaskCreateDTO taskData) {
-//        Task task = taskMapper.map(taskData);
-//        Long assigneeId = taskData.getAssigneeId();
-//        if (assigneeId != null) {
-//            var assignee = userRepository.findById(assigneeId).orElse(null);
-//            task.setAssignee(assignee);
-//        }
-//        taskRepository.save(task);
-//        TaskDTO dto = taskMapper.map(task);
-//        return dto;
-//    }
+
     public DataDto create(TaskCreateDTO taskData) {
         Task task = taskMapper.map(taskData);
         Long assigneeId = taskData.getAssigneeId();
@@ -123,9 +102,6 @@ public class TaskService {
         TimeTrackerCreateDTO timeTrackerCreateDTO = new TimeTrackerCreateDTO();
         timeTrackerCreateDTO.setNameTask(taskData.getName());
         timeTrackerCreateDTO.setNameTimeTrackerId(task.getId());
-//        timeTrackerCreateDTO.setStartTime(startTime.startStopTime());
-//        timeTrackerCreateDTO.setStopTime(startTime.startStopTime());
-
         TimeTracker timeTracker = timeTrackerMapper.map(timeTrackerCreateDTO);
         timeTrackerRepository.save(timeTracker);
         DataDto dto = new DataDto();
@@ -139,9 +115,61 @@ public class TaskService {
         taskMapper.update(taskData, task);
         return taskMapper.map(task);
     }
+
+    public List<TaskTimeTrackerDataDto> findByUserId(long id) {
+        List<Task> tasks = taskRepository.findAllByAssigneeId(id);
+        List<TimeTracker> timeTrackers = new ArrayList<>();
+
+        for (int i = 0; i < tasks.size(); i++) {
+            TimeTracker timeTracker = timeTrackerRepository.findByNameTimeTrackerId(tasks.get(i).getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(""));
+            timeTrackers.add(timeTracker);
+        }
+        List<TaskTimeTrackerDataDto> dto = new ArrayList<>();
+        List<TaskDTO> taskDTOS = new ArrayList<>();
+        List<TimeTrackerDTO> timeTrackerDTOS = new ArrayList<>();
+
+        for (Task task : tasks) {
+            TaskDTO taskDTO = taskMapper.map(task);
+            taskDTOS.add(taskDTO);
+            System.out.println("task " + task.getId() + " " + task.getName());
+        }
+        for (TimeTracker timeTracker : timeTrackers) {
+            TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
+            timeTrackerDTOS.add(timeTrackerDTO);
+            System.out.println("timeTracker " + timeTracker.getId() + " " + timeTracker.getNameTimeTracker());
+
+        }
+        for (int i = 0; i < tasks.size() && i < timeTrackers.size(); i++) {
+            TaskTimeTrackerDataDto taskTimeTrackerDataDto = new TaskTimeTrackerDataDto();
+            taskTimeTrackerDataDto.setTaskDTO(taskDTOS.get(i));
+            taskTimeTrackerDataDto.setTimeTrackerDTO(timeTrackerDTOS.get(i));
+            dto.add(taskTimeTrackerDataDto);
+            printIdsAndNames(dto);
+        }
+
+        return dto;
+    }
     public void delete(long id) {
         var task = taskRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Task not found"));
-        taskRepository.delete(task);
+        taskRepository.deleteById(id);
+    }
+
+    // Метод для проверки содержимого объекта taskTimeTrackersDataDto
+    public void printIdsAndNames(List<TaskTimeTrackerDataDto> dto) {
+
+        for (Object item : dto) {
+            if (item instanceof TaskDTO) {
+                TaskDTO task = (TaskDTO) item;
+                System.out.println("TaskDTO - ID: " + task.getId() + ", Name: " + task.getName());
+            } else if (item instanceof TaskTimeTrackerDataDto) {
+                TaskTimeTrackerDataDto timeTracker = (TaskTimeTrackerDataDto) item;
+                System.out.println("TimeTrackerDataDto - ID: " + timeTracker.getTimeTrackerDTO().getId()
+                        + ", Name: " + timeTracker.getTimeTrackerDTO().getNameTask());
+            } else {
+                System.out.println("Unknown type: " + item.getClass().getName());
+            }
+        }
     }
 }
