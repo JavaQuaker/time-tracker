@@ -26,10 +26,8 @@ public class Task implements BaseEntity {
 
     private String name;
 
-    @CreatedDate
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     private LocalDateTime timeoutAt;
 
     @ManyToOne

@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 
 @Service
 public class StartTime {
-
-
     public LocalDateTime startStopTime() {
         LocalDateTime time = LocalDateTime.now();
         return time;

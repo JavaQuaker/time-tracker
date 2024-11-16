@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -150,6 +151,74 @@ public class TaskService {
 
         return dto;
     }
+
+    //проверить метод поиска задач по конкрентному пользователю в заданный интервал времени.
+    //Запрос ничего не возвращает. Метод не выполнятеся. Отладочная печать фиксирует отсутсвие работы метода
+    public List<TaskTimeTrackerDataDto> findByTime(TimeRequestDTO data, long id) {
+      List<Task> tasks = taskRepository.findAllByAssigneeIdAndCreatedAtAndTimeoutAt(id, data.getCreatedAt(), data.getTimeoutAt());
+      for (Task task : tasks) {
+          System.out.println("What task consider " + task.getName() + " " + task.getCreatedAt() + " " + task.getTimeoutAt());
+      }
+      List<TimeTracker> timeTrackers = new ArrayList<>();
+      for (int i = 0; i < tasks.size(); i++) {
+          TimeTracker timeTracker = timeTrackerRepository.findByNameTimeTrackerId(tasks.get(i).getId())
+                  .orElseThrow(()-> new ResourceNotFoundException("task not found"));
+          timeTrackers.add(timeTracker);
+      }
+      List<TaskDTO> taskDTOS = new ArrayList<>();
+      List<TimeTrackerDTO> timeTrackerDTOS = new ArrayList<>();
+      List<TaskTimeTrackerDataDto> dto = new ArrayList<>();
+
+      for (Task task : tasks) {
+          TaskDTO taskDTO = taskMapper.map(task);
+          taskDTOS.add(taskDTO);
+      }
+      for (TimeTracker timeTracker : timeTrackers) {
+          TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
+          timeTrackerDTOS.add(timeTrackerDTO);
+      }
+      for (int i = 0; i < tasks.size() && i < timeTrackers.size(); i++) {
+          TaskTimeTrackerDataDto taskTimeTrackerDataDto = new TaskTimeTrackerDataDto();
+          taskTimeTrackerDataDto.setTaskDTO(taskDTOS.get(i));
+          taskTimeTrackerDataDto.setTimeTrackerDTO(timeTrackerDTOS.get(i));
+          dto.add(taskTimeTrackerDataDto);
+      }
+      printIdsAndNames(dto);
+      return dto;
+    }
+
+//      List<Task> tasks = taskRepository.findAllByAssigneeId(id);
+//      List<TimeTracker> timeTrackers = new ArrayList<>();
+//      for (int i = 0; i < tasks.size(); i++) {
+//          TimeTracker timeTracker = timeTrackerRepository.findByNameTimeTrackerId(tasks.get(i).getId())
+//                  .orElseThrow(() -> new ResourceNotFoundException("task not found"));
+//          timeTrackers.add(timeTracker);
+//      }
+//      List<TaskDTO> taskDTOS = new ArrayList<>();
+//      List<TimeTrackerDTO> timeTrackerDTOS = new ArrayList<>();
+//      List<TaskTimeTrackerDataDto> dto = new ArrayList<>();
+//
+//      for (Task task : tasks) {
+//          TaskDTO taskDTO = taskMapper.map(task);
+//          if (taskDTO.getCreatedAt().getDayOfWeek().equals(data.getStart().getDayOfWeek()) &&
+//                  taskDTO.getCreatedAt().getDayOfWeek().equals(data.getStop().getDayOfWeek())) {
+//              taskDTOS.add(taskDTO);
+//          }
+//      }
+//
+//      for (TimeTracker timeTracker : timeTrackers) {
+//          TimeTrackerDTO timeTrackerDTO = timeTrackerMapper.map(timeTracker);
+//          timeTrackerDTOS.add(timeTrackerDTO);
+//      }
+//
+//      for (int i = 0; i < tasks.size() && i < timeTrackers.size(); i++) {
+//          TaskTimeTrackerDataDto taskTimeTrackerDataDto = new TaskTimeTrackerDataDto();
+//          taskTimeTrackerDataDto.setTaskDTO(taskDTOS.get(i));
+//          taskTimeTrackerDataDto.setTimeTrackerDTO(timeTrackerDTOS.get(i));
+//          dto.add(taskTimeTrackerDataDto);
+//          }
+//        return dto;
+//    }
     public void delete(long id) {
         var task = taskRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Task not found"));

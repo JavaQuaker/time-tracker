@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -82,18 +84,37 @@ public class TaskController {
     TaskDTO update(@RequestBody TaskUpdateDTO taskData, @PathVariable long id) {
         return taskService.update(taskData, id);
     }
-    @Operation(summary = "Delete by id")
+    @Operation(summary = "Find by user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Task delete"),
-            @ApiResponse(responseCode = "400", description = "Task with id not found")
+            @ApiResponse(responseCode = "200", description = "User to be found"),
+            @ApiResponse(responseCode = "400", description = "User not found")
     })
-
     @GetMapping(path = "findByUserId/{userId}")
     @ResponseStatus(HttpStatus.OK)
     List<TaskTimeTrackerDataDto> findByUserId(@PathVariable long userId) {
         return taskService.findByUserId(userId);
     }
+    /*
+    Проверить метод сортировки по выбранной дате. Метод должен возвращать задачи в интервале выбранных
+    дат. Метод возвращает 500 (start = NPE) либо 405. Не верно передаю формат времени в запросе???
+    */
 
+    @Operation(summary = "Find by tasks between date")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task to be found"),
+            @ApiResponse(responseCode = "400", description = "Task not found")
+    })
+    @GetMapping(path = "findByTime/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    List<TaskTimeTrackerDataDto> findByTime(@RequestBody TimeRequestDTO dto, @PathVariable long userId) {
+        return taskService.findByTime(dto, userId);
+    }
+
+    @Operation(summary = "Delete by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task delete"),
+            @ApiResponse(responseCode = "400", description = "Task with id not found")
+    })
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable long id) {
         taskService.delete(id);

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @Repository
@@ -23,4 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
 //    List<TaskTimeTrackerDataDto> findAllTaskTimeTrackers(@Param("assignee_id") Long assigneeId);
 
     //проверить метод. Должен возвращать список объектов?
+    //Метод поиска всех задач пользователя за заданный интервал времени
+
+    List<Task> findAllByAssigneeIdAndCreatedAtAndTimeoutAt(long userId, LocalDateTime start, LocalDateTime end);
 }
